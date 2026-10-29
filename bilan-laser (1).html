@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bilan Laser – Le Spa</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+:root{--bx:#642B3B;--br:#654536;--be:#E9DCCD;--cr:#F8F3EC;--tx:#654536;--ln:#D3C2AE}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cr);color:var(--tx);font:15px/1.5 system-ui,Helvetica,Arial,sans-serif}
+header{background:var(--bx);color:#fff;display:flex;align-items:center;gap:12px;padding:8px 16px;position:sticky;top:0;z-index:5;height:54px}
+.brand{font:500 26px/1 "Cormorant Garamond",Georgia,serif;letter-spacing:.04em}
+.brand small{display:block;font-size:11px;letter-spacing:.14em;opacity:.8;margin-top:3px}
+#bg{display:none;background:none;border:0;color:#fff;font-size:24px;padding:0}
+#st{margin-left:auto;font-size:13px;opacity:.9}
+.lay{display:flex;min-height:calc(100vh - 54px)}
+aside{width:270px;background:var(--be);padding:12px;flex:none;display:flex;flex-direction:column;gap:8px}
+#list{display:flex;flex-direction:column;gap:4px;overflow:auto}
+.ci{text-align:left;background:#fff8;border:1px solid transparent;border-radius:8px;padding:8px 10px;font:inherit;color:inherit;cursor:pointer}
+.ci small{display:block;color:var(--br)}.ci.on{background:#fff;border-color:var(--br)}
+main{flex:1;min-width:0;padding:20px 28px 60px;border-left:6px solid var(--br);margin:16px 0 16px 0;max-width:900px}
+h1{font-size:28px;color:var(--bx);margin:0}h2{color:var(--bx);font-size:24px;margin:8px 0 2px}
+h3{background:var(--be);color:var(--bx);border-radius:10px;padding:8px 14px;font-size:16px;margin:26px 0 14px}
+h4{color:var(--br);margin:20px 0 8px;font-size:15px}
+.mu{color:var(--br);margin:2px 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:14px 0 6px;border-bottom:2px solid var(--ln)}
+.tabs button{background:none;border:0;padding:9px 14px;font:inherit;color:var(--br);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabs button.on{color:var(--bx);font-weight:700;border-color:var(--bx)}
+.p{display:none}.p.on{display:block}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.f{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--br);margin-bottom:10px}
+input[type=password],input[type=text],input[type=tel],input[type=email],input[type=date],textarea,.sig{font:15px system-ui,sans-serif;color:var(--tx);border:1px solid var(--ln);background:#fff;border-radius:6px;padding:8px 10px;width:100%}
+textarea{min-height:76px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--bx);outline-offset:1px}
+.ck{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2px 16px;margin-bottom:10px}
+.c{display:flex;align-items:center;gap:10px;padding:7px 0;cursor:pointer}
+.c input{width:20px;height:20px;accent-color:var(--bx);flex:none}
+button{font:inherit;border:1px solid var(--br);background:#fff;color:var(--br);border-radius:8px;padding:8px 14px;cursor:pointer}
+button.p2,#nw{background:var(--bx);color:#fff;border-color:var(--bx)}
+button.d{color:#a3202f;border-color:#d9a3a9}
+.al{background:#f8e3dc;border-left:4px solid var(--bx);padding:8px 12px;border-radius:6px;margin:10px 0}.al:empty{display:none}
+.sig{height:90px;display:flex;align-items:center;justify-content:center;color:var(--ln);cursor:pointer;padding:4px}.sig img{max-height:80px;max-width:100%}
+details.se{background:#fff;border:1px solid var(--ln);border-radius:10px;padding:0 16px;margin:10px 0}
+details.se[open]{padding-bottom:16px}
+summary{cursor:pointer;padding:12px 0;font-weight:700;color:var(--bx);display:flex;gap:12px;align-items:center}
+summary span{font-weight:400;color:var(--br)}summary em{background:var(--be);border-radius:20px;padding:1px 10px;font-size:12px;font-style:normal}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th{background:var(--bx);color:#fff;text-align:left;padding:8px}td{padding:9px 8px;border-bottom:1px solid var(--ln)}tr[data-go]{cursor:pointer}tr[data-go]:hover{background:var(--be)}
+.info p{max-width:70ch}.empty{padding:50px 10px;color:var(--br)}
+dialog{border:0;border-radius:12px;padding:16px;width:min(680px,94vw)}dialog::backdrop{background:#0006}
+canvas{width:100%;border:1px dashed var(--br);border-radius:8px;touch-action:none;background:#fff}
+.r{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--bx);color:#fff;padding:10px 16px;border-radius:8px;display:none;z-index:9}#toast.show{display:block}
+main p,main li{text-align:justify;hyphens:auto}.mu{opacity:.85}
+.sb{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.sb button.on{background:var(--bx);color:#fff;border-color:var(--bx)}
+.vb{background:var(--be);border-radius:10px;padding:12px 16px;margin:10px 0}
+td input{min-width:100px;padding:6px}td input[type=date]{min-width:140px}
+#out{background:none;color:#fff;border-color:#fff9;padding:5px 10px;font-size:13px}
+#lg{position:fixed;inset:0;background:var(--cr);z-index:20;display:none;align-items:center;justify-content:center}
+#lg>div{background:#fff;border-radius:14px;padding:28px;width:min(380px,92vw);display:flex;flex-direction:column;gap:12px;border:1px solid var(--ln)}
+#lerr{color:#a3202f;min-height:1.3em;font-size:14px}
+@media(max-width:800px){#bg{display:block}aside{position:fixed;left:-290px;top:54px;bottom:0;z-index:4;transition:left .2s}aside.open{left:0}main{padding:16px 14px 60px;border-left-width:4px}}
+@media print{header,aside,.no{display:none!important}.p{display:block!important}.lay{display:block}main{border:0;max-width:none}details.se{break-inside:avoid}}
+@media(prefers-reduced-motion:reduce){aside{transition:none}}
+</style></head><body>
+<header><button id="bg" aria-label="Liste des clientes">☰</button><div class="brand">Le Spa<small>Créateur du mieux être</small></div><span id="st"></span><button id="out" hidden>Se déconnecter</button></header>
+<div class="lay"><aside id="side"><input type="text" id="q" placeholder="Rechercher un client"><button id="nw">Nouveau client</button><div id="list"></div></aside><main id="main"></main></div>
+<dialog id="dg"><b>Signer avec le doigt ou le stylet</b><canvas id="cv" width="600" height="220"></canvas><div class="r"><button id="sx">Effacer</button><button id="sc">Annuler</button><button id="sv" class="p2">Valider la signature</button></div></dialog>
+<div id="lg"><div><div class="brand" style="color:var(--bx)">Le Spa<small>Créateur du mieux être</small></div><h2>Connexion</h2><label class="f">Adresse e-mail<input type="email" id="le" autocomplete="username"></label><label class="f">Mot de passe<input type="password" id="lp" autocomplete="current-password"></label><span id="lerr"></span><button class="p2" id="li">Se connecter</button></div></div>
+<dialog id="dn"><b>Nouveau client</b><div class="g" style="margin-top:12px"><label class="f">Nom<input type="text" id="nn"></label><label class="f">Prénom<input type="text" id="np"></label></div><div class="r"><button id="nx">Annuler</button><button id="nk" class="p2">Créer le dossier</button></div></dialog>
+<div id="toast"></div>
+<script>
+// À REMPLIR : copie la clé publique (publishable key) depuis le fichier de l’application Bilan Minceur
+const SB_URL='https://ltklzscktwddipmvplkx.supabase.co',SB_KEY='sb_publishable_vsUUXQpJRitg6Pa-y47qXg_CaX-h0K8';
+const db=supabase.createClient(SB_URL,SB_KEY);
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const FITZ=['I — très claire, brûle toujours','II — claire, brûle facilement','III — intermédiaire','IV — mate, bronze facilement','V — brune','VI — très foncée'];
+const PEAU=['Peau intacte','Irritation / rougeur','Bronzage récent','Autobronzant'];
+const SANTE=['Grossesse / projet de grossesse / allaitement','Pathologie ou infection cutanée sur la zone','Herpès récurrent sur la zone','Antécédent de cancer cutané / lésion suspecte','Épilepsie déclenchée par la lumière','Pacemaker / défibrillateur ou dispositif médical implanté','Traitement médical en cours ou récent','Traitement ou produit photosensibilisant','Isotrétinoïne récente','Trouble connu de cicatrisation / chéloïdes','Trouble hormonal / pilosité d’origine hormonale','Allergies ou réactions cutanées importantes'];
+const SVAL=['J’ai répondu de façon sincère et complète.','J’ai signalé tout traitement, changement ou événement de santé pertinent.'];
+const DECL=['J’ai reçu une information sur le principe, les bénéfices attendus et les limites du traitement.','Les risques et effets indésirables possibles m’ont été expliqués.','J’ai pu poser mes questions et obtenir des réponses compréhensibles.','Je m’engage à signaler toute modification de santé, traitement ou exposition.','Je comprends qu’aucun résultat final précis ne peut être garanti.'];
+const EXPO=['Exposition solaire récente','UV / cabine récente','Exposition solaire prévue prochainement','Autobronzant récent','Capsules / produits favorisant le bronzage','Médicament ou produit photosensibilisant'];
+const PREP=['Rasage réalisé selon les consignes','Pas d’épilation à la cire / pince / épilateur avant la séance','Pas de gommage récent sur la zone','Pas de crème anesthésiante sans accord de la praticienne','Zone propre, sans produit irritant le jour de la séance'];
+const DEC=['Séance à reporter','Séance validée par la praticienne'];
+const REACT=['Aucune réaction particulière','Rougeur / érythème','Œdème périfolliculaire','Chaleur / picotements','Autre réaction'];
+let C=null,S=[],list=[],tab='bilan',dirty=new Set(),timer,open=new Set(),cur=null,drew=false;
+const today=()=>new Date().toISOString().slice(0,10),sa=s=>s?` data-s="${s}"`:'';
+const T=(o,k,l,t='text',s='')=>`<label class="f">${l}<input type="${t}" data-k="${k}"${sa(s)} value="${esc(o[k])}"></label>`;
+const A=(o,k,l,s='')=>`<label class="f">${l}<textarea data-k="${k}"${sa(s)}>${esc(o[k])}</textarea></label>`;
+const CK=(o,g,a,s='')=>a.map(x=>`<label class="c"><input type="checkbox" data-g="${g}" data-v="${esc(x)}"${sa(s)}${(o[g]||[]).includes(x)?' checked':''}>${x}</label>`).join('');
+const RD=(o,k,a,s='')=>a.map(x=>`<label class="c"><input type="radio" name="${k}${s}" data-k="${k}"${sa(s)} value="${esc(x)}"${o[k]==x?' checked':''}>${x}</label>`).join('');
+const SG=(o,k,l,s='')=>`<div class="f">${l}<div class="sig" data-sg="${k}"${sa(s)}>${o[k]?`<img src="${o[k]}" alt="Signature">`:'Toucher pour signer'}</div></div>`;
+function toast(m,e){const t=$('#toast');t.textContent=m;t.className='show';clearTimeout(t._t);t._t=setTimeout(()=>t.className='',3500)}
+const setSt=m=>$('#st').textContent=m;
+async function q(p){const r=await p;if(r.error){toast('Erreur : '+r.error.message);throw r.error}return r.data}
+async function loadList(){list=await q(db.from('laser_clients').select('id,nom,prenom,telephone').order('nom'));drawList()}
+function drawList(){const f=$('#q').value.toLowerCase();$('#list').innerHTML=list.filter(c=>((c.nom||'')+' '+(c.prenom||'')).toLowerCase().includes(f)).map(c=>`<button class="ci${C&&C.id==c.id?' on':''}" data-id="${c.id}"><b>${esc(c.nom||'Sans nom')}</b> ${esc(c.prenom)}<small>${esc(c.telephone)}</small></button>`).join('')||'<p class="mu">Aucun client trouvé.</p>'}
+async function openC(id){await flush();C=await q(db.from('laser_clients').select('*').eq('id',id).single());C.dossier=C.dossier||{};S=await q(db.from('laser_seances').select('*').eq('client_id',id).order('numero'));S.forEach(s=>s.donnees=s.donnees||{});tab='bilan';drawList();render();$('#side').classList.remove('open')}
+async function flush(){clearTimeout(timer);if(dirty.size)await save()}
+function mark(sid){dirty.add(sid?String(sid):'c');setSt('Modifié…');clearTimeout(timer);timer=setTimeout(save,1200)}
+async function save(){if(!C)return;const ids=[...dirty];dirty.clear();setSt('Enregistrement…');try{const d=C.dossier;
+if(ids.includes('c')){await q(db.from('laser_clients').update({nom:d.nom||'',prenom:d.prenom||'',telephone:d.telephone||'',email:d.email||'',dossier:d}).eq('id',C.id));const l=list.find(x=>x.id==C.id);if(l){l.nom=d.nom;l.prenom=d.prenom;l.telephone=d.telephone;drawList()}}
+for(const s of S)if(ids.includes(String(s.id)))await q(db.from('laser_seances').update({donnees:s.donnees,date_seance:s.donnees.date||null}).eq('id',s.id));
+setSt('Enregistré')}catch(e){ids.forEach(i=>dirty.add(i));setSt('Non enregistré')}}
+const pBilan=d=>`<h2>Bilan initial</h2><p class="mu">Identification, zones traitées et phototype</p>
+<h3>Identification</h3><div class="g">${T(d,'nom','Nom')}${T(d,'prenom','Prénom')}${T(d,'naissance','Date de naissance','date')}${T(d,'date_bilan','Date du bilan','date')}${T(d,'telephone','Téléphone','tel')}${T(d,'email','E-mail','email')}${T(d,'profession','Profession')}</div>
+<h3>Zones et objectif</h3>${A(d,'zones','Zones concernées')}${A(d,'objectif','Objectif / attentes')}
+<h3>Phototype — échelle de Fitzpatrick</h3><div class="ck">${RD(d,'fitz',FITZ)}</div>${A(d,'obs_peau','Observations cutanées')}${T(d,'fitz_retenu','Phototype retenu')}
+<h3>État de la peau le jour du bilan</h3><div class="ck">${CK(d,'peau',PEAU)}</div>`;
+const alerte=d=>{const n=(d.sante||[]).length;return n?`${n} réponse${n>1?'s positives':' positive'} à discuter avec la praticienne.`:''};
+const pSante=d=>`<h2>Questionnaire santé</h2><p class="mu">Toute réponse positive doit être discutée avec la praticienne.</p><div class="al" id="al">${alerte(d)}</div>
+<h3>Antécédents / situations à signaler</h3><div class="ck">${CK(d,'sante',SANTE)}</div>${A(d,'sante_prec','Précisions / traitement / date')}${A(d,'sante_autres','Autres informations utiles')}
+<h3>Validation du questionnaire</h3>${CK(d,'sante_val',SVAL)}`;
+const pConsent=d=>`<h2>Consentement éclairé</h2><p class="mu">Épilation laser — lecture et validation avant traitement</p><h3>Information</h3><div class="info">
+<p>Le laser vise une réduction durable et progressive de la pilosité. Le nombre de séances varie selon la zone, le phototype, la couleur et le diamètre du poil, le cycle pilaire, les facteurs hormonaux et la réponse individuelle. Un résultat définitif à 100 % ne peut pas être garanti.</p>
+<p>Les sensations peuvent être de chaleur, picotements ou claquements. Une rougeur, un œdème périfolliculaire, une sensation de chaleur ou une irritation transitoire peuvent survenir. Plus rarement, des troubles pigmentaires ou des brûlures peuvent apparaître.</p>
+<p>Les consignes avant et après séance doivent être respectées. Toute prise de médicament, exposition solaire, modification de l’état de la peau ou grossesse doit être signalée.</p></div>
+<h3>Déclarations</h3>${CK(d,'consent',DECL)}<div class="g">${SG(d,'sig','Signature client(e) / patient(e)')}${T(d,'consent_date','Date','date')}</div>`;
+let curS=null;
+const cs=()=>S.find(x=>x.id==curS)||S[0];
+const selBar=()=>{const c=cs();return `<div class="sb no">${S.map(x=>`<button data-sel="${x.id}"${c&&c.id==x.id?' class="on"':''}>Séance ${x.numero}</button>`).join('')}<button class="p2" data-act="addS">Ajouter une séance</button></div>`+(S.length?'':'<p class="mu">Aucune séance pour le moment. Ajoute la première pour remplir cette page.</p>')};
+const pExpo=()=>{const c=cs(),o=c&&c.donnees,i=c&&c.id;return `<h2>Exposition &amp; préparation</h2><p class="mu">À vérifier avant chaque séance</p>${selBar()}`+(c?`<h3>Exposition / photosensibilité</h3><div class="ck">${CK(o,'expo',EXPO,i)}</div>${A(o,'expo_det','Détails / date / zone',i)}<h3>Préparation de la zone</h3><div class="ck">${CK(o,'prep',PREP,i)}</div><h3>Consultation / décision</h3><div class="ck">${RD(o,'decision',DEC,i)}</div>${A(o,'motif','Motif / recommandations',i)}`:'')};
+const pCons=()=>{const c=cs(),o=c&&c.donnees,i=c&&c.id;return `<h2>Consignes après séance</h2><p class="mu">À remettre / rappeler au client</p><h3>Après la séance</h3><ul><li>Éviter les sources de chaleur importantes et les soins irritants selon les recommandations de la praticienne.</li><li>Éviter l’exposition solaire et protéger la zone avec une protection solaire adaptée.</li><li>Ne pas arracher les poils entre les séances ; le rasage peut être utilisé si nécessaire.</li><li>Ne pas exfolier la zone tant qu’elle est irritée ou sensibilisée.</li><li>Contacter Le Spa en cas de réaction inhabituelle, importante ou persistante.</li></ul>${selBar()}`+(c?`<h3>Réaction immédiate</h3><div class="ck">${CK(o,'react',REACT,i)}</div>${A(o,'react_obs','Observations',i)}<h3>Consignes personnalisées</h3>${A(o,'consignes','',i)}`:'')};
+const pSuivi=d=>`<h2>Suivi des séances</h2><p class="mu">Une ligne par séance — à compléter et valider</p><div class="tw"><table><tr><th>Séance<th>Date<th>Zone(s)<th>Phototype<th>Paramètres / réglages<th>Réaction<th>Initiales<th class="no"></tr>${S.map(x=>{const o=x.donnees,i=x.id,c=(k,t='text')=>`<td><input type="${t}" data-k="${k}" data-s="${i}" value="${esc(o[k])}">`;return `<tr><td>${x.numero}${c('date','date')}${c('zones')}${c('phototype')}${c('params')}${c('reaction')}${c('initiales')}<td class="no"><button class="d" data-act="delS" data-id="${i}">Supprimer</button></tr>`}).join('')||'<tr><td colspan="8" class="mu">Aucune séance pour le moment.</tr>'}</table></div><p class="no"><button class="p2" data-act="addS">Ajouter une séance</button></p><h3>Notes / incidents / reports</h3>${A(d,'notes','')}`;
+const pValid=()=>`<h2>Validation des séances</h2><p class="mu">Signature et traçabilité</p><h3>Validation</h3><p>Pour chaque séance, le client ou la cliente confirme avoir signalé toute modification pertinente depuis le précédent rendez-vous. Les consignes adaptées lui ont été rappelées.</p>${S.map(x=>{const o=x.donnees,i=x.id;return `<div class="vb"><b>Séance ${x.numero}</b><div class="g">${T(o,'vdate','Date','date',i)}<label class="c"><input type="checkbox" data-k="validee"${sa(i)}${o.validee?' checked':''}>Séance validée</label>${SG(o,'sigc','Signature client(e)',i)}${SG(o,'sigp','Signature praticienne',i)}</div></div>`}).join('')||'<p class="mu">Aucune séance pour le moment. Ajoute-la depuis l’onglet Suivi des séances.</p>'}`;
+function render(){const m=$('#main');if(!C){m.innerHTML='<div class="empty"><h2>Bilan laser</h2><p>Choisis un client dans la liste, ou crée un nouveau dossier.</p></div>';return}
+const d=C.dossier,TB=[['bilan','Bilan initial',pBilan(d)],['sante','Questionnaire santé',pSante(d)],['expo','Exposition & préparation',pExpo()],['consent','Consentement',pConsent(d)],['cons','Consignes après séance',pCons()],['suivi','Suivi des séances',pSuivi(d)],['valid','Validation des séances',pValid()]];
+m.innerHTML=`<div class="top"><h1>${esc(d.prenom)} ${esc(d.nom)}</h1><span class="no"><button data-act="print">Imprimer / PDF</button> <button class="d" data-act="delC">Supprimer</button></span></div><nav class="tabs no">${TB.map(t=>`<button data-tab="${t[0]}">${t[1]}</button>`).join('')}</nav>${TB.map(t=>`<section class="p" data-t="${t[0]}">${t[2]}</section>`).join('')}`;showTab(tab)}
+function showTab(t){tab=t;document.querySelectorAll('.p').forEach(p=>p.classList.toggle('on',p.dataset.t==t));document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab==t))}
+const obj=s=>s?S.find(x=>x.id==s).donnees:C.dossier;
+document.addEventListener('input',e=>{const t=e.target;if(!C||!(t.dataset.k||t.dataset.g))return;const o=obj(t.dataset.s);
+if(t.dataset.g){const a=o[t.dataset.g]=o[t.dataset.g]||[],i=a.indexOf(t.dataset.v);if(t.checked&&i<0)a.push(t.dataset.v);if(!t.checked&&i>=0)a.splice(i,1);if(t.dataset.g=='sante')$('#al').textContent=alerte(o)}
+else o[t.dataset.k]=t.type=='checkbox'?t.checked:t.value;mark(t.dataset.s)});
+document.addEventListener('toggle',e=>{const s=e.target.dataset&&e.target.dataset.sid;if(s)e.target.open?open.add(s):open.delete(s)},true);
+document.addEventListener('click',async e=>{const t=e.target.closest('button,[data-sg],tr[data-go]');if(!t)return;const D=t.dataset;
+if(D.id&&t.classList.contains('ci'))return openC(D.id);
+if(D.sel){curS=D.sel;render();return}
+if(D.tab)return showTab(D.tab);
+if(D.go){open.add(D.go);render();showTab('seances');return}
+if(D.sg){const o=obj(D.s);cur={o,k:D.sg,s:D.s};drew=false;$('#cv').getContext('2d').clearRect(0,0,600,220);$('#dg').showModal();return}
+if(t.id=='bg')return $('#side').classList.toggle('open');
+if(t.id=='nw'){$('#nn').value=$('#np').value='';$('#dn').showModal();$('#nn').focus();return}
+if(D.act=='print')return print();
+if(D.act=='addS'){const r=await q(db.from('laser_seances').insert({client_id:C.id,numero:S.length+1,donnees:{date:today()}}).select().single());S.push(r);curS=r.id;render()}
+if(D.act=='delS'&&confirm('Supprimer cette séance définitivement ?')){await q(db.from('laser_seances').delete().eq('id',D.id));S=S.filter(s=>s.id!=D.id);S.forEach((s,i)=>{if(s.numero!=i+1){s.numero=i+1;db.from('laser_seances').update({numero:i+1}).eq('id',s.id).then(()=>{})}});curS=null;render()}
+if(D.act=='delC'&&confirm('Supprimer ce dossier et toutes ses séances définitivement ?')){await q(db.from('laser_clients').delete().eq('id',C.id));list=list.filter(x=>x.id!=C.id);C=null;S=[];dirty.clear();drawList();render()}});
+$('#q').oninput=drawList;
+const cv=$('#cv'),cx=cv.getContext('2d'),pt=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]};
+cx.lineWidth=2.5;cx.lineCap='round';cx.strokeStyle='#2b1a1f';let dr=false;
+cv.onpointerdown=e=>{dr=drew=true;cv.setPointerCapture(e.pointerId);cx.beginPath();cx.moveTo(...pt(e))};
+cv.onpointermove=e=>{if(dr){cx.lineTo(...pt(e));cx.stroke()}};cv.onpointerup=()=>dr=false;
+$('#sx').onclick=()=>{cx.clearRect(0,0,600,220);drew=false};$('#sc').onclick=()=>$('#dg').close();
+$('#sv').onclick=()=>{cur.o[cur.k]=drew?cv.toDataURL('image/png'):'';$('#dg').close();const el=document.querySelector(`[data-sg="${cur.k}"]${cur.s?`[data-s="${cur.s}"]`:':not([data-s])'}`);el.innerHTML=cur.o[cur.k]?`<img src="${cur.o[cur.k]}" alt="Signature">`:'Toucher pour signer';mark(cur.s)};
+onbeforeprint=()=>document.querySelectorAll('details').forEach(d=>d.open=true);
+onbeforeunload=e=>{if(dirty.size)e.preventDefault()};
+async function mk(){const nom=$('#nn').value.trim(),prenom=$('#np').value.trim();if(!nom){$('#nn').focus();return}await flush();$('#dn').close();const r=await q(db.from('laser_clients').insert({nom,prenom,dossier:{nom,prenom,date_bilan:today()}}).select().single());list.push(r);await openC(r.id)}
+$('#nk').onclick=mk;$('#nx').onclick=()=>$('#dn').close();$('#nn').onkeydown=$('#np').onkeydown=e=>{if(e.key=='Enter')mk()};
+async function enter(){$('#lg').style.display='none';$('#out').hidden=false;await loadList();render()}
+async function login(){const{error}=await db.auth.signInWithPassword({email:$('#le').value.trim(),password:$('#lp').value});if(error){$('#lerr').textContent='Adresse e-mail ou mot de passe incorrect.';return}$('#lp').value='';enter()}
+$('#li').onclick=login;$('#lp').onkeydown=e=>{if(e.key=='Enter')login()};
+$('#out').onclick=async()=>{await flush();await db.auth.signOut();location.reload()};
+(async()=>{const{data}=await db.auth.getSession();if(data.session)enter();else $('#lg').style.display='flex'})();
+</script></body></html>
