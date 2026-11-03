@@ -9,7 +9,7 @@
 body{margin:0;background:var(--cr);color:var(--tx);font:15px/1.5 system-ui,Helvetica,Arial,sans-serif}
 header{background:var(--bx);color:#fff;display:flex;align-items:center;gap:12px;padding:8px 16px;position:sticky;top:0;z-index:5;height:54px}
 .brand{font:500 26px/1 "Cormorant Garamond",Georgia,serif;letter-spacing:.04em}
-.brand small{display:block;font-size:11px;letter-spacing:.14em;opacity:.8;margin-top:3px}
+.brand small{text-transform:uppercase;display:block;font-size:11px;letter-spacing:.14em;opacity:.8;margin-top:3px}
 #bg{display:none;background:none;border:0;color:#fff;font-size:24px;padding:0}
 #st{margin-left:auto;font-size:13px;opacity:.9}
 .lay{display:flex;min-height:calc(100vh - 54px)}
@@ -81,7 +81,7 @@ table{min-width:0;font-size:9pt}td input{min-width:0;padding:2px}.tw{overflow:vi
 .hero h1{font-size:34px;margin:0 0 6px}main .lead{text-align:left;max-width:46ch;margin:0 0 8px}.r2{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .bt{display:inline-block;border:1px solid var(--br);border-radius:8px;padding:8px 14px;color:var(--br);text-decoration:none;background:#fff}.bt:hover,.ic:hover{border-color:var(--bx)}
 .info4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:8px 0 16px}@media(max-width:1100px){.info4{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.info4{grid-template-columns:1fr}}
-.ic{display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid var(--ln);border-radius:12px;padding:14px 16px;color:var(--br);text-decoration:none;font-size:13px}.ic b{color:var(--tx);font-size:15px;font-weight:600}
+.ic{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;background:#fff;border:1px solid var(--ln);border-radius:12px;padding:14px 16px;color:var(--br);text-decoration:none;font-size:13px}.ic b{color:var(--tx);font-size:15px;font-weight:600}
 @media(prefers-reduced-motion:reduce){aside{transition:none}}
 </style></head><body>
 <header><button id="bg" aria-label="Liste des clientes">☰</button><div class="brand">Le Spa<small>Créateur du mieux être</small></div><span id="st"></span><button id="out" hidden>Se déconnecter</button></header>
@@ -157,7 +157,7 @@ const pSuivi=d=>`<h2>Suivi des Séances</h2><p class="mu">Une ligne par séance.
 const pValid=()=>`<h2>Validation des Séances</h2><p class="mu">Signature et traçabilité</p><h3>Validation</h3><p>Pour chaque séance, le client ou la cliente confirme avoir signalé toute modification pertinente depuis le précédent rendez-vous. Les consignes adaptées lui ont été rappelées.</p><p class="mu">La date, la décision et le nom de la praticienne se remplissent automatiquement à partir des autres onglets. Il ne reste que les signatures.</p>${S.map(x=>{const o=x.donnees,i=x.id;return `<div class="vb"><b>Séance ${x.numero}</b><div class="g"><div class="f">Date<b>${fd(o.date)||'—'}</b></div><div class="f">Décision<b>${o.decision==DEC[1]?'Séance validée':o.decision==DEC[0]?'Séance à reporter':'En attente de validation'}</b></div><div class="f">Praticienne<b>${esc(o.prat)||'—'}</b></div></div><div class="g">${SG(o,'sigc','Signature client(e)',i)}${SG(o,'sigp','Signature praticienne',i)}</div></div>`}).join('')||'<p class="mu">Aucune séance pour le moment. Ajoute-la depuis l’onglet Suivi des séances.</p>'}`;
 function render(){const m=$('#main');if(!C){$('#tb').innerHTML='';m.innerHTML=home();return}
 const d=C.dossier,TB=[['bilan','Bilan Initial',pBilan(d)],['sante','Questionnaire Santé',pSante(d)],['expo','Exposition & Préparation',pExpo()],['consent','Consentement',pConsent(d)],['cons','Consignes après Séance',pCons()],['suivi','Suivi des Séances',pSuivi(d)],['valid','Validation des Séances',pValid()]];
-m.innerHTML=`${ph(d)}<div class="top"><h1>${esc(d.prenom)} ${esc(d.nom)}</h1><span class="no"><button data-act="print">Imprimer / PDF</button> <button class="d" data-act="delC">Supprimer</button></span></div>${TB.map(t=>`<section class="p" data-t="${t[0]}">${t[2]}</section>`).join('')}`;$('#tb').innerHTML=TB.map(t=>`<button data-tab="${t[0]}">${t[1]}</button>`).join('');showTab(tab)}
+m.innerHTML=`${ph(d)}<div class="top"><h1>${esc(d.prenom)} ${esc(d.nom)}</h1><span class="no"><button data-act="home">← Retour à l’accueil</button> <button data-act="print">Imprimer / PDF</button> <button class="d" data-act="delC">Supprimer</button></span></div>${TB.map(t=>`<section class="p" data-t="${t[0]}">${t[2]}</section>`).join('')}<p class="no"><button class="p2" data-act="home">← Retour à l’accueil</button></p>`;$('#tb').innerHTML=TB.map(t=>`<button data-tab="${t[0]}">${t[1]}</button>`).join('');showTab(tab)}
 function showTab(t){tab=t;if(C&&(t=='suivi'||t=='valid'))document.querySelector(`[data-t="${t}"]`).innerHTML=t=='valid'?pValid():pSuivi(C.dossier);document.querySelectorAll('.p').forEach(p=>p.classList.toggle('on',p.dataset.t==t));document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab==t))}
 const obj=s=>s?S.find(x=>x.id==s).donnees:C.dossier;
 document.addEventListener('input',e=>{const t=e.target;if(!C||!(t.dataset.k||t.dataset.g))return;const o=obj(t.dataset.s);
@@ -174,6 +174,7 @@ if(t.id=='bg')return $('#side').classList.toggle('open');
 if(t.id=='nw'||D.act=='newC'){$('#nn').value=$('#np').value='';$('#dn').showModal();$('#nn').focus();return}
 if(D.act=='edR'){ed.has(D.id)?ed.delete(D.id):ed.add(D.id);refS();return}
 if(D.act=='rsR'){const o=obj(D.id);delete o.zo;delete o.po;delete o.ro;mark(D.id);refS();return}
+if(D.act=='home'){await flush();C=null;S=[];drawList();render();scrollTo(0,0);return}
 if(D.act=='print')return print();
 if(D.act=='addS'){const r=await q(db.from('laser_seances').insert({client_id:C.id,numero:S.length+1,donnees:{date:today(),zl:[...(C.dossier.zones_l||[])],prat:S.length?S[S.length-1].donnees.prat||'':''}}).select().single());S.push(r);curS=r.id;render()}
 if(D.act=='delS'&&confirm('Supprimer cette séance définitivement ?')){await q(db.from('laser_seances').delete().eq('id',D.id));S=S.filter(s=>s.id!=D.id);S.forEach((s,i)=>{if(s.numero!=i+1){s.numero=i+1;db.from('laser_seances').update({numero:i+1}).eq('id',s.id).then(()=>{})}});curS=null;render()}
